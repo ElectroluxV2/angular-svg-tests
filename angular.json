@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "security": {
+              "autoCsp": true
+            },
             "outputPath": "dist/svg-tests",
             "index": "src/index.html",
             "browser": "src/main.ts",
