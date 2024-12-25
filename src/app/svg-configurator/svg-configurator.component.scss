@@ -1,0 +1,12 @@
+:host {
+  display: grid;
+  grid-template-columns: auto auto;
+
+  .knobs {
+    padding: 16px;
+  }
+
+  .preview {
+    background-color: var(--mat-sys-outline);
+  }
+}

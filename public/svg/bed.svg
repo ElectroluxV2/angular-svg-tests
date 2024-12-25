@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+
+  <style>
+    #bed {
+      cursor: pointer;
+      stroke: var(--bed-stroke, #000000);
+
+      @media (prefers-color-scheme: dark) {
+        --bed-stroke: #000000;
+        --bed-top-fill: #AAAAAA;
+        --bed-pillow-fill: #DDDDDD;
+      }
+
+      .bottom {
+        fill: var(--bed-bottom-fill);
+      }
+
+      .top {
+        fill: var(--bed-top-fill, #DDDDDD);
+      }
+
+      .pillow {
+        fill: var(--bed-pillow-fill, #FFFFFF);
+      }
+    }
+
+    use[href='#bed']:hover {
+      opacity: 0.5;
+    }
+
+    .empty {
+      --bed-bottom-fill: #2ECC40;
+    }
+
+    .occupied {
+      --bed-bottom-fill: #FF4136;
+    }
+
+    .woman {
+      --bed-bottom-fill: #F012BE;
+    }
+
+    .man {
+      --bed-bottom-fill: #0074D9;
+    }
+
+  </style>
+
+
+  <defs>
+    <g id="bed">
+      <rect class="bottom" x="0" y="0" width="100" height="260" />
+      <rect class="top" x="0" y="180" width="100" height="80" />
+      <rect class="pillow" x="15" y="210" width="70" height="40" rx="10" />
+    </g>
+  </defs>
+
+<!--  <use id="bed-1" class="empty" x="5" y="5" href="#bed" />-->
+<!--  <use id="bed-2" class="occupied" x="110" y="5" href="#bed" />-->
+<!--  <use id="bed-3" class="occupied woman" x="5" y="270" href="#bed" />-->
+<!--  <use id="bed-4" class="occupied man" x="110" y="270" href="#bed" />-->
+</svg>

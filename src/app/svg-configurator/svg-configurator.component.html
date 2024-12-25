@@ -1,0 +1,18 @@
+<aside class="knobs">
+  <h2>Knobs</h2>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Bed count</mat-label>
+    <button mat-icon-button matPrefix (click)="onBedCountDecrease()">
+      <mat-icon>cancel</mat-icon>
+    </button>
+    <input min="0" type="number" matInput [(ngModel)]="bedCount">
+    <button mat-icon-button matSuffix (click)="onBedCountIncrease()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </mat-form-field>
+</aside>
+
+<main #preview class="preview" (click)="onPreviewClick($event)">
+
+</main>
