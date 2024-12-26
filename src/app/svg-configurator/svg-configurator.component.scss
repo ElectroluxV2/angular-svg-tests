@@ -1,9 +1,30 @@
 :host {
+  height: 100%;
+  min-height: 0;
   display: grid;
   grid-template-columns: auto auto;
 
   .knobs {
     padding: 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    h2 {
+      margin: 0 0 16px 0;
+    }
+
+    .beds {
+      overflow: auto;
+
+      .bet-id {
+        margin: 0 0 16px 0;
+      }
+
+      .bed-state-field {
+        width: 100%;
+      }
+    }
   }
 
   .preview {

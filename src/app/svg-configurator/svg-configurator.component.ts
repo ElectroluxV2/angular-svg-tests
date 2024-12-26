@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, computed, effect, ElementRef, inject, linkedSignal, resource, signal, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, effect, ElementRef, inject, linkedSignal, resource, Signal, signal, viewChild } from '@angular/core';
 import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatIconButton } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-svg-configurator',
@@ -17,6 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatSuffix,
     FormsModule,
     ReactiveFormsModule,
+    MatSelect,
+    MatOption,
   ],
   templateUrl: './svg-configurator.component.html',
   styleUrl: './svg-configurator.component.scss'
@@ -34,22 +37,22 @@ export class SvgConfiguratorComponent {
 
   protected readonly bedCount = signal(1);
 
-  protected readonly bedStates = linkedSignal<number, Map<number, string>>({
+  protected readonly bedStates = linkedSignal<number, Map<number, Signal<string>>>({
     source: this.bedCount,
     computation: (bedCount, previous) => {
-      const newState = new Map(Array.from({ length: bedCount }, (_, i) => [i, 'empty']));
+      const newState = new Map(Array.from({ length: bedCount }, (_, i) => [i, signal('empty')]));
 
       // Preserve state after bed count change
       for (const [key, value] of previous?.value?.entries() ?? []) {
         if (!newState.has(key)) continue;
-        newState.set(key, value);
+        newState.set(key, signal(value()));
       }
 
       return newState;
     }
   });
 
-  private readonly _logBedStates = effect(() => console.log(this.bedStates()))
+  private readonly _logBedStates = effect(() => console.log(this.bedStates()));
 
   protected readonly svgElement = computed(() => {
     const svgDocument = this.svgResource.value();
@@ -64,7 +67,7 @@ export class SvgConfiguratorComponent {
       useElement.setAttribute("x", String(10 + (bedId % 5) * 110));
       useElement.setAttribute("y", String(10 + (bedId >= 5 ? 270 : 0)));
       useElement.setAttribute("href", "#bed");
-      useElement.setAttribute("class", bedState);
+      useElement.setAttribute("class", bedState());
       useElement.setAttribute("id", `bed-${bedId}`);
 
       svgElement.appendChild(useElement);
@@ -83,6 +86,15 @@ export class SvgConfiguratorComponent {
     previewElement.appendChild(svgElement);
   });
 
+  protected readonly bedStateSteps: Record<string, string> = ({
+    'empty': 'occupied',
+    'occupied': 'occupied woman',
+    'occupied woman': 'occupied man',
+    'occupied man': 'empty',
+  });
+
+  protected readonly bedVariants = Object.keys(this.bedStateSteps);
+
   protected onPreviewClick(event: Readonly<MouseEvent>) {
     const target = event.target;
     if (!(target instanceof SVGUseElement)) return;
@@ -94,15 +106,10 @@ export class SvgConfiguratorComponent {
     const currentState = this.bedStates().get(bedId);
     if (!currentState) return;
 
-    const nextState = ({
-      'empty': 'occupied',
-      'occupied': 'occupied woman',
-      'occupied woman': 'occupied man',
-      'occupied man': 'empty',
-    })[currentState];
+    const nextState = this.bedStateSteps[currentState()];
     if (!nextState) throw new Error(`No state after ${currentState} was defined!`);
 
-    this.bedStates.update(x => new Map(x).set(bedId, nextState));
+    this.bedStates.update(x => new Map(x).set(bedId, signal(nextState)));
   }
 
   protected onBedCountDecrease() {
@@ -110,6 +117,6 @@ export class SvgConfiguratorComponent {
   }
 
   protected onBedCountIncrease() {
-    this.bedCount.update(x => x + 1);
+    this.bedCount.update(x => Math.min(x + 1, 10));
   }
 }

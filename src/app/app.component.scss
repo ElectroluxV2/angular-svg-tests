@@ -1,17 +1,15 @@
 @use '@angular/material' as mat;
 
 :host {
-  min-height: 100svh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
 
   .top-bar {
+    flex-shrink: 0;
+
     @include mat.toolbar-overrides((
       container-background-color: var(--mat-sys-tertiary-container),
     ));
-  }
-
-  .bottom-bar {
-    margin-top: auto;
   }
 }

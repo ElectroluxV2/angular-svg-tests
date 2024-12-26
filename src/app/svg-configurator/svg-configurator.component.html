@@ -3,14 +3,29 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Bed count</mat-label>
-    <button mat-icon-button matPrefix (click)="onBedCountDecrease()">
+    <button [disabled]="bedCount() <= 0" mat-icon-button matPrefix (click)="onBedCountDecrease()">
       <mat-icon>cancel</mat-icon>
     </button>
-    <input min="0" type="number" matInput [(ngModel)]="bedCount">
-    <button mat-icon-button matSuffix (click)="onBedCountIncrease()">
+    <input min="0" max="10" type="number" matInput [(ngModel)]="bedCount">
+    <button [disabled]="bedCount() >= 10" mat-icon-button matSuffix (click)="onBedCountIncrease()">
       <mat-icon>add_circle</mat-icon>
     </button>
   </mat-form-field>
+
+  <section class="beds">
+    @for (bedState of bedStates().entries(); track bedState[0]) {
+      <h3 class="bet-id">bed #{{ bedState[0] }}</h3>
+      <mat-form-field appearance="outline" class="bed-state-field">
+        <mat-label>Status</mat-label>
+        <mat-select required [(ngModel)]="bedState[1]">
+          @for (bedVariant of bedVariants; track bedVariant) {
+            <mat-option [value]="bedVariant">{{ bedVariant }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+  </section>
+
 </aside>
 
 <main #preview class="preview" (click)="onPreviewClick($event)">
